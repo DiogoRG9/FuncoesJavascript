@@ -64,11 +64,44 @@ function gerarCalendario() {
   }
   
   function eFeriado(data) {
+    
+    const feriadosMoveis = retornaFeriadosMoveis (data.getFullYear())
+    const feriadosFixos = retornaFeriadosFixos();
+
+    const feriados = [
+      ...feriadosFixos, 
+      ...feriadosMoveis
+    ]
+
+    //const feriados = [
+      //'01/01', // Ano Novo
+      //'01/05', // Dia do Trabalho
+      //'25/07', // Dia Estadual da Consciencia Negra
+      //'07/09', // Independência do Brasil
+      //'12/10', // Dia de Nossa Senhora Aparecida
+      //'15/10', // Dia da proclamação da república
+      //'02/11', // Finados
+      //'25/12', // Natal
+      //...feriadosMoveis
+    //];
+  
+   const dataFormatada = dateToStrDayMonth(data)
+
+    return feriados.includes(dataFormatada);
+  }  
+
+  function dateToStrDayMonth(data){
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    return  `${dia}/${mes}`;
+  }
+
+  function retornaFeriadosMoveis(ano){
     let carnaval, pascoa, sextaSanta, corpus;
 
     /*----- calcula feriados moveis */
     let X, Y, a, b, c, d, g, diaDaPascoa, mesDaPascoa, diaDoMesDaPascoa;
-    ano = data.getFullYear();
+    //ano = data.getFullYear();
     if (ano <= 1699) {
         X = 22;
         Y = 2;
@@ -120,61 +153,37 @@ function gerarCalendario() {
     
     const domingoPascoa = new Date(`${ano}-${mesDaPascoa}-${diaDoMesDaPascoa}T00:00:00`); 
     let dataFeriado;
-    let diaExtracao;
-    let mesExtracao;
-
+  
     //pascoa
-    dataFeriado = domingoPascoa;
-    //diaExtracao = dataFeriado.getDate().toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário
-    //mesExtracao = (dataFeriado.getMonth() + 1).toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário    
-    pascoa = dateToDayMonth(dataFeriado);
+    dataFeriado = domingoPascoa;  
+    pascoa = dateToStrDayMonth(dataFeriado);
 
     //Carnaval
-    dataFeriado = new Date(domingoPascoa.getTime() - 47 * 24 * 60 * 60 * 1000);
-    //diaExtracao = dataFeriado.getDate().toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário
-    //mesExtracao = (dataFeriado.getMonth() + 1).toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário    
-    carnaval = dateToDayMonth(dataFeriado)
+    dataFeriado = new Date(domingoPascoa.getTime() - 47 * 24 * 60 * 60 * 1000); 
+    carnaval = dateToStrDayMonth(dataFeriado)
 
     // Sexta-feira Santa
     dataFeriado = new Date(domingoPascoa.getTime() - 2 * 24 * 60 * 60 * 1000); 
-    //diaExtracao = dataFeriado.getDate().toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário
-    //mesExtracao = (dataFeriado.getMonth() + 1).toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário    
-    //sextaSanta = `${diaExtracao}/${mesExtracao}`;
-    sextaSanta = dateToDayMonth(dataFeriado);
+    sextaSanta = dateToStrDayMonth(dataFeriado);
 
     //Corpus Christi
     dataFeriado = new Date(domingoPascoa.getTime() + 60 * 24 * 60 * 60 * 1000); 
-    //diaExtracao = dataFeriado.getDate().toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário
-    //mesExtracao = (dataFeriado.getMonth() + 1).toString().padStart(2, '0'); // Adiciona um zero à esquerda se necessário    
-    //corpus = `${diaExtracao}/${mesExtracao}`;
-    corpus = dateToDayMonth(dataFeriado);
+    corpus = dateToStrDayMonth(dataFeriado);
 
-    const feriados = [
-      '01/01', // Ano Novo
-      '01/05', // Dia do Trabalho
-      '25/07', // Dia Estadual da Consciencia Negra
-      '07/09', // Independência do Brasil
-      '12/10', // Dia de Nossa Senhora Aparecida
-      '15/10', // Dia da proclamação da república
-      '02/11', // Finados
-      '25/12',  // Natal
-      carnaval,
-      pascoa, 
-      sextaSanta,
-      corpus
-    ];
-  
-    //const dataFormatada = `${data.getDate()}/${data.getMonth() + 1}`;
-    //const dia = String(data.getDate()).padStart(2, '0');
-    //const mes = String(data.getMonth() + 1).padStart(2, '0');
-    //const dataFormatada = `${dia}/${mes}`;
-   const dataFormatada = dateToDayMonth(data)
-
-    return feriados.includes(dataFormatada);
-  }  
-
-  function dateToDayMonth(data){
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    return  `${dia}/${mes}`;
+    return [carnaval, pascoa, sextaSanta, corpus];
   }
+
+    function retornaFeriadosFixos(){
+      const feriadosFixos = [
+        '01/01', // Ano Novo
+        '01/05', // Dia do Trabalho
+        '25/07', // Dia Estadual da Consciencia Negra
+        '07/09', // Independência do Brasil
+        '12/10', // Dia de Nossa Senhora Aparecida
+        '15/10', // Dia da proclamação da república
+        '02/11', // Finados
+        '25/12', // Natal
+      ];
+
+      return feriadosFixos;
+    }
